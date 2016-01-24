@@ -7,7 +7,7 @@
 
 Name:           %{?scl_prefix}%{pkg_name}
 Version:        3.2.1
-Release:        21.12%{?dist}
+Release:        21.13%{?dist}
 Summary:        Provides new interfaces, implementations and utilities for Java Collections
 License:        ASL 2.0
 URL:            http://commons.apache.org/%{base_name}/
@@ -15,6 +15,7 @@ Source0:        http://www.apache.org/dist/commons/%{base_name}/source/%{short_n
 
 Patch0:         jakarta-%{short_name}-javadoc-nonet.patch
 Patch4:         commons-collections-3.2-build_xml.patch
+Patch5:         CVE-2015-7501.patch
 
 BuildArch:      noarch
 
@@ -78,6 +79,7 @@ find . -name "*.jar" -exec rm -f {} \;
 
 %patch0 -p1
 %patch4 -b .sav
+%patch5 -p1
 
 # Fix file eof
 %{__sed} -i 's/\r//' LICENSE.txt
@@ -128,6 +130,10 @@ cp -pr build/docs/testframework/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-testfram
 
 
 %changelog
+* Fri Nov 20 2015 Michal Srb <msrb@redhat.com> - 3.2.1-21.13
+- Fix Java object de-serialization vulnerability
+- Resolves: CVE-2015-7501
+
 * Tue Jan 13 2015 Michael Simacek <msimacek@redhat.com> - 3.2.1-21.12
 - Mass rebuild 2015-01-13
 
