@@ -9,7 +9,7 @@
 
 Name:           %{?scl_prefix}apache-%{short_name}
 Version:        3.2.1
-Release:        24%{?dist}
+Release:        26%{?dist}
 Summary:        Provides new interfaces, implementations and utilities for Java Collections
 License:        ASL 2.0
 Group:          Development/Libraries
@@ -21,24 +21,20 @@ Patch4:         commons-collections-3.2-build_xml.patch
 
 BuildArch:      noarch
 
-BuildRequires: java-devel
-BuildRequires: jpackage-utils
-BuildRequires: maven-local
-BuildRequires: maven-antrun-plugin
-BuildRequires: maven-assembly-plugin
-BuildRequires: maven-compiler-plugin
-BuildRequires: maven-jar-plugin
-BuildRequires: maven-javadoc-plugin
-BuildRequires: maven-install-plugin
-BuildRequires: maven-resources-plugin
-BuildRequires: maven-doxia-sitetools
-BuildRequires: maven-plugin-bundle
-BuildRequires: maven-surefire-plugin
-BuildRequires: maven-surefire-provider-junit
-BuildRequires: ant
-BuildRequires: apache-commons-parent >= 26-7
-
-%{?scl:Requires: %scl_runtime}
+BuildRequires: maven30-maven-local
+BuildRequires: maven30-maven-antrun-plugin
+BuildRequires: maven30-maven-assembly-plugin
+BuildRequires: maven30-maven-compiler-plugin
+BuildRequires: maven30-maven-jar-plugin
+BuildRequires: maven30-maven-javadoc-plugin
+BuildRequires: maven30-maven-install-plugin
+BuildRequires: maven30-maven-resources-plugin
+BuildRequires: maven30-maven-doxia-sitetools
+BuildRequires: maven30-maven-plugin-bundle
+BuildRequires: maven30-maven-surefire-plugin
+BuildRequires: maven30-maven-surefire-provider-junit
+BuildRequires: maven30-ant
+BuildRequires: maven30-apache-commons-parent >= 26-7
 
 %description
 The introduction of the Collections API by Sun in JDK 1.2 has been a
@@ -59,6 +55,7 @@ such as union, intersection, and closure.
 Summary:        Testframework for %{pkg_name}
 Group:          Development/Tools
 Requires:       %{name} = %{version}-%{release}
+%{?scl:Requires: %scl_runtime}
 
 %description testframework
 %{summary}.
@@ -78,7 +75,7 @@ Group:          Documentation
 %{summary}.
 
 %prep
-%{?scl:scl enable %{scl} - << "EOF"}
+%{?scl:scl enable maven30 %{scl} - << "EOF"}
 %setup -q -n %{short_name}-%{version}-src
 # remove all binary libs
 find . -name "*.jar" -exec rm -f {} \;
@@ -98,14 +95,14 @@ find . -name "*.jar" -exec rm -f {} \;
 %{?scl:EOF}
 
 %build
-%{?scl:scl enable %{scl} - << "EOF"}
+%{?scl:scl enable maven30 %{scl} - << "EOF"}
 %mvn_build
 
 ant tf.javadoc
 %{?scl:EOF}
 
 %install
-%{?scl:scl enable %{scl} - << "EOF"}
+%{?scl:scl enable maven30 %{scl} - << "EOF"}
 %mvn_install
 
 # this JAR doesn't have POM file
@@ -132,6 +129,12 @@ cp -pr build/docs/testframework/* $RPM_BUILD_ROOT%{_javadocdir}/%{pkg_name}-test
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Tue Jun 17 2014 Severin Gehwolf <sgehwolf@redhat.com> - 3.2.1-26
+- Enable maven30 collection in spec file only.
+
+* Mon Jun 16 2014 Severin Gehwolf <sgehwolf@redhat.com> - 3.2.1-25
+- Build against maven30 collection.
+
 * Mon Jan 20 2014 Omair Majid <omajid@redhat.com> - 3.2.1-24
 - Rebuild in order to fix osgi()-style provides.
 - Resolves: RHBZ#1054813
